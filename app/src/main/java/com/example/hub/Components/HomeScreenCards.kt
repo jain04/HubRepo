@@ -75,6 +75,7 @@ fun ItemRepo(item: Item,navController: NavController){
             text = "${item.description}",
             modifier = Modifier.padding(horizontal = 16.dp),
             fontSize = 12.sp,
+            maxLines = 2
         )
     }
 }
