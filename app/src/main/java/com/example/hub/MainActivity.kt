@@ -22,34 +22,40 @@ import com.example.hub.Pages.WebViewScreen
 import com.example.hub.data.ItemsRepositoryImplementation
 import com.example.hub.presentation.ItemsViewModel
 import com.example.hub.ui.theme.HubTheme
+import com.example.hub.room.AppDatabase
+import com.example.hub.RetrofitInstance
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<ItemsViewModel>(factoryProducer ={
+    private val viewModel by viewModels<ItemsViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ItemsViewModel(ItemsRepositoryImplementation(RetrofitInstance.api))
-                    as T
-            }
+                // Get repoDao from AppDatabase
+                val repoDao = AppDatabase.getDatabase(applicationContext).repoDao()
 
+                // Initialize ItemsRepositoryImplementation with both API and repoDao
+                val repository = ItemsRepositoryImplementation(RetrofitInstance.api, repoDao)
+
+                return ItemsViewModel(repository) as T
+            }
         }
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()  // If you are using edge-to-edge UI
+
         setContent {
             HubTheme {
-                Surface (
+                Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
-                ){
+                ) {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = "home_screen") {
                         // Step 3: Define routes for your screens
                         composable("home_screen") {
-                            // Pass navController to HomeScreen
-                            HomeScreen(viewModel = viewModel, navController=navController)
+                            HomeScreen(viewModel = viewModel, navController = navController)
                         }
                         composable(
                             "item_detail_screen/{itemId}",
@@ -58,7 +64,7 @@ class MainActivity : ComponentActivity() {
                             // Retrieve the itemId argument from the route
                             val itemId = backStackEntry.arguments?.getString("itemId")
                             if (itemId != null) {
-                                RepoDetailScreen(itemId = itemId, viewModel = viewModel,navController=navController)
+                                RepoDetailScreen(itemId = itemId, viewModel = viewModel, navController = navController)
                             }
                         }
 
@@ -66,15 +72,9 @@ class MainActivity : ComponentActivity() {
                             val url = backStackEntry.arguments?.getString("url") ?: ""
                             WebViewScreen(url = url) // Implement WebViewScreen to display the URL
                         }
+                    }
                 }
             }
         }
     }
-}}
-
-
-
-
-
-
-
+}

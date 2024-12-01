@@ -86,7 +86,7 @@ fun RepoDetailScreen(itemId: String, viewModel: ItemsViewModel,navController:Nav
                                 )
                             }
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text(text = "Name: ${item.name}", style = MaterialTheme.typography.bodyLarge)
+                            Text(text = "Repo Name: ${item.name}", style = MaterialTheme.typography.bodyLarge)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(text = "Description: ${item.description ?: "No description available"}")
                             Spacer(modifier = Modifier.height(8.dp))

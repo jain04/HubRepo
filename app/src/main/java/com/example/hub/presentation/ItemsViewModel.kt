@@ -5,12 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.hub.data.ItemsRepository
 import com.example.hub.data.Result
 import com.example.hub.data.model.Item
+import com.example.hub.data.toItem
+import com.example.hub.room.MyApplication
+import com.example.hub.room.data.toRepositoryEntity
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ItemsViewModel(
@@ -20,31 +19,29 @@ class ItemsViewModel(
     private val _items = MutableStateFlow<List<Item>>(emptyList())
     val items = _items.asStateFlow()
 
-    private val _hasMoreData = MutableStateFlow(true)
-    val hasMoreData = _hasMoreData.asStateFlow()
-
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
+
+    private val _hasMoreData = MutableStateFlow(true)
+    val hasMoreData = _hasMoreData.asStateFlow()
 
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
     private var currentPage = 1
 
-    // Add a new state for repository details
     private val _repoDetails = MutableStateFlow<Item?>(null)
     val repoDetails = _repoDetails.asStateFlow()
 
-    // Add a loading state for repo details
     private val _loadingRepoDetails = MutableStateFlow(false)
     val loadingRepoDetails = _loadingRepoDetails.asStateFlow()
 
-    // Fetch repositories with pagination
+    // Fetch repositories from API and insert into Room Database
     fun fetchRepositories(query: String, page: Int) {
         viewModelScope.launch {
-            // Start loading
             _loading.value = true
 
+            // Call API to fetch repositories
             itemsRepository.getItemRepository(query, page).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
@@ -53,23 +50,25 @@ class ItemsViewModel(
                     }
                     is Result.Success -> {
                         result.data?.let { newItems ->
-                            // Append new data to the list
-                            _items.update { currentItems -> currentItems + newItems }
+                            // Save the fetched items to the database
+                            val repositoryEntities = newItems.map { it.toRepositoryEntity() }
+                            MyApplication.database.repoDao().insertAllRepositories(repositoryEntities)
 
-                            // If no new items are returned, set hasMoreData to false
+                            // Update the state with the new items
+                            _items.value = newItems
+                            _loading.value = false
+
+                            // Check if more data is available
                             if (newItems.isEmpty()) {
                                 _hasMoreData.value = false
                             }
                         }
-                        // Stop loading after fetching
-                        _loading.value = false
                     }
                 }
             }
         }
     }
 
-    // Fetch details of a specific repository
     fun fetchRepoDetails(itemId: String) {
         viewModelScope.launch {
             _loadingRepoDetails.value = true
@@ -89,7 +88,16 @@ class ItemsViewModel(
         }
     }
 
-    // Reset pagination and item list
+    // Observe repositories from the database using Flow
+    fun getRepositoriesFromDb() {
+        viewModelScope.launch {
+            MyApplication.database.repoDao().getAllRepositories().collect { repositoryEntities ->
+                _items.value = repositoryEntities.map { it.toItem() }
+            }
+        }
+    }
+
+    // Reset pagination
     fun resetPagination() {
         currentPage = 1
         _hasMoreData.value = true
@@ -97,7 +105,7 @@ class ItemsViewModel(
         _items.value = emptyList()
     }
 
-    // Load next page for pagination
+    // Load the next page
     fun loadNextPage(query: String) {
         if (_loading.value || !_hasMoreData.value) return
 
@@ -105,5 +113,3 @@ class ItemsViewModel(
         fetchRepositories(query, currentPage)
     }
 }
-
-
