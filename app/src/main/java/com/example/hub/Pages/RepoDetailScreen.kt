@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -70,7 +71,8 @@ fun RepoDetailScreen(itemId: String, viewModel: ItemsViewModel,navController:Nav
 
 
 
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)) {
                             if(imageState is AsyncImagePainter.State.Error){
                                 Box(modifier = Modifier.fillMaxWidth().height(200.dp),
                                     contentAlignment= Alignment.Center){

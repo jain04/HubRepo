@@ -30,7 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.hub.Components.ItemRepo
 import com.example.hub.presentation.ItemsViewModel
@@ -85,13 +87,18 @@ fun HomeScreen(viewModel: ItemsViewModel, navController: NavController) {
                     .padding(paddingValues)
             ) {
                 // Search bar section
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Search For Repository",
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.SemiBold)// space above the text field
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.height(16.dp)) // space above the text field
+                    Spacer(modifier = Modifier.height(16.dp))
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
