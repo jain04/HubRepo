@@ -11,7 +11,7 @@ interface Api {
     @GET("search/repositories")
     suspend fun getRepositoryList(
         @Query("q") query: String,
-        @Query("per_page") perPage:Int=10,
+        @Query("per_page") perPage:Int=15,
         @Query("page") page:Int
     ):RepoData
 

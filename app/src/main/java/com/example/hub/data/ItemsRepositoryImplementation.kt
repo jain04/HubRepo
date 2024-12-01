@@ -23,7 +23,7 @@ class ItemsRepositoryImplementation(
 
             try {
                 // Try fetching data from the network (GitHub API)
-                itemsFromApi = api.getRepositoryList(query = query, perPage = 10, page = page)
+                itemsFromApi = api.getRepositoryList(query = query, perPage = 15, page = page)
 
                 // Cache the result in the database (Room)
                 itemsFromApi.items.forEach { item ->
