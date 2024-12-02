@@ -54,14 +54,17 @@ class ItemsViewModel(
                             val repositoryEntities = newItems.map { it.toRepositoryEntity() }
                             MyApplication.database.repoDao().insertAllRepositories(repositoryEntities)
 
-                            // Update the state with the new items
-                            _items.value = newItems
+                            // Append the new items to the existing list (pagination)
+                            if (page == 1) {
+                                _items.value = newItems // reset items if it's the first page
+                            } else {
+                                _items.value = _items.value + newItems // append new items to the list
+                            }
+
                             _loading.value = false
 
-                            // Check if more data is available
-                            if (newItems.isEmpty()) {
-                                _hasMoreData.value = false
-                            }
+                            // Check if more data is available (no more items)
+                            _hasMoreData.value = newItems.isNotEmpty()
                         }
                     }
                 }
@@ -69,6 +72,7 @@ class ItemsViewModel(
         }
     }
 
+    // Fetch repository details
     fun fetchRepoDetails(itemId: String) {
         viewModelScope.launch {
             _loadingRepoDetails.value = true
@@ -97,16 +101,16 @@ class ItemsViewModel(
         }
     }
 
-    // Reset pagination
+    // Reset pagination state
     fun resetPagination() {
         currentPage = 1
         _hasMoreData.value = true
         _loading.value = false
-        _items.value = emptyList()
+        _items.value = emptyList() // reset the list
     }
 
     // Load the next page
-    fun loadNextPage(query: String) {
+    fun loadNextPage(query: String, page: Int) {
         if (_loading.value || !_hasMoreData.value) return
 
         currentPage += 1

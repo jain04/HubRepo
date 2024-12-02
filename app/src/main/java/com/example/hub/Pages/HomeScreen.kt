@@ -60,10 +60,10 @@ fun HomeScreen(viewModel: ItemsViewModel, navController: NavController) {
     }
 
     // Function to load the next page when scrolling to the bottom
-    fun loadNextPage() {
+    fun loadNextPage(searchQuery: String) {
         if (!loading && hasMoreData) {
             loading = true
-            viewModel.loadNextPage(searchQuery)  // Pass current search query to viewModel
+            viewModel.loadNextPage(searchQuery, page)  // Pass current search query and page to ViewModel
         }
     }
 
@@ -73,7 +73,7 @@ fun HomeScreen(viewModel: ItemsViewModel, navController: NavController) {
             val lastVisibleItem = lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()
             if (lastVisibleItem != null && lastVisibleItem.index == repoList.size - 1 && hasMoreData && !loading) {
                 // User reached the end of the list, trigger loading of next page
-                loadNextPage()
+                loadNextPage(searchQuery)
             }
         }
     }
@@ -91,7 +91,7 @@ fun HomeScreen(viewModel: ItemsViewModel, navController: NavController) {
                 Text("Search For Repository",
                     modifier = Modifier.padding(horizontal = 16.dp),
                     fontSize = 17.sp,
-                    fontWeight = FontWeight.SemiBold)// space above the text field
+                    fontWeight = FontWeight.SemiBold) // space above the text field
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -113,7 +113,7 @@ fun HomeScreen(viewModel: ItemsViewModel, navController: NavController) {
                             page = 1  // Reset page to 1 for a new search
                             hasMoreData = true  // Reset hasMoreData flag on new search
                             viewModel.resetPagination()  // Reset pagination state in ViewModel
-                            viewModel.fetchRepositories(searchQuery, page)
+                            viewModel.fetchRepositories(searchQuery, page)  // Fetch first page of results
                         },
                         modifier = Modifier.padding(start = 8.dp)
                     ) {
@@ -175,6 +175,7 @@ fun HomeScreen(viewModel: ItemsViewModel, navController: NavController) {
         }
     )
 }
+
 
 
 
