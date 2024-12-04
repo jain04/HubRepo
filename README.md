@@ -33,14 +33,15 @@ The app follows modern Android development best practices:
 
 
 ## ScreenShots
-Home Screen
-![Home Screen](Screenshot_20241204_104104.png)
-![Home Screen2](Screenshot_20241204_104139.png)
 
-Repo Screen
+### Home Screen
+![Home Screen](Screenshot_20241204_104104.png)
+![Home Screen 2](Screenshot_20241204_104139.png)
+
+### Repo Screen
 ![RepoDetail Screen](Screenshot_20241204_104206.png)
 
-Web view
+### Web View
 ![Web View](Screenshot_20241204_104257.png)
 
 
