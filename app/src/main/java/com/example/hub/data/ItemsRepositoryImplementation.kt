@@ -96,7 +96,7 @@ fun RepositoryEntity.toItem(): Item {
         stargazers_count = this.stargazers_count,
         html_url = this.html_url,
         collaborators_url = this.collaborators_url,
-        owner = TODO(),
+        owner = TODO()
     )
 }
 

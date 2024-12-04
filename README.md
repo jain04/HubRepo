@@ -32,3 +32,15 @@ The app follows modern Android development best practices:
 - **Repository Pattern**: A repository pattern is used to handle data operations and abstract the logic for the UI to make the app modular and testable.
 
 
+## ScreenShots
+Home Screen
+![Home Screen](C:/Users/adity/AndroidStudioProjects/Hub/Screenshot_20241204_104104.png)
+![Home Screen2](C:/Users/adity/AndroidStudioProjects/Hub/Screenshot_20241204_104139.png)
+
+Repo Screen
+![RepoDetail Screen](C:/Users/adity/AndroidStudioProjects/Hub/Screenshot_20241204_104206.png)
+
+Web view
+![Web View](C:/Users/adity/AndroidStudioProjects/Hub/Screenshot_20241204_104257.png)
+
+

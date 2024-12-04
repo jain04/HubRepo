@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,7 +69,7 @@ fun HomeScreen(viewModel: ItemsViewModel, navController: NavController) {
     }
 
     // Observe the scroll position to trigger pagination when reaching the end
-    LaunchedEffect(lazyListState.firstVisibleItemIndex) {
+    LaunchedEffect(remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }) {
         if (lazyListState.layoutInfo.visibleItemsInfo.isNotEmpty()) {
             val lastVisibleItem = lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()
             if (lastVisibleItem != null && lastVisibleItem.index == repoList.size - 1 && hasMoreData && !loading) {
