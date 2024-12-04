@@ -34,7 +34,7 @@ The app follows modern Android development best practices:
 
 ## ScreenShots
 Home Screen
-![Home Screen](C:/Users/adity/AndroidStudioProjects/Hub/Screenshot_20241204_104104.png)
+![Home Screen](Screenshot_20241204_104104.png)
 ![Home Screen2](C:/Users/adity/AndroidStudioProjects/Hub/Screenshot_20241204_104139.png)
 
 Repo Screen
